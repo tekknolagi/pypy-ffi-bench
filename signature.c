@@ -80,7 +80,7 @@ static PyMethodDef signature_methods[] = {
 
 static struct PyModuleDef signature_definition = {
     PyModuleDef_HEAD_INIT, "signature",
-    "A C extension module with type information exposed.", 0,
+    "A C extension module with type information exposed.", -1,
     signature_methods,
     NULL,
     NULL,
@@ -88,5 +88,9 @@ static struct PyModuleDef signature_definition = {
     NULL};
 
 PyMODINIT_FUNC PyInit_signature(void) {
-  return PyModuleDef_Init(&signature_definition);
+  PyObject* result = PyState_FindModule(&signature_definition);
+  if (result != NULL) {
+    return Py_NewRef(result);
+  }
+  return PyModule_Create(&signature_definition);
 }
