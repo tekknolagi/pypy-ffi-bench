@@ -1,0 +1,143 @@
+[1c79453612e] {jit-log-opt-loop
+# Loop 1 (unpackiterable [dict_valueiterator]) : loop with 63 ops
+[p0, p1]
++251: label(p0, p1, descr=TargetToken(139743941899296))
+debug_merge_point(0, 0, 'unpackiterable [dict_valueiterator]')
++256: guard_class(p0, ConstClass(W_DictMultiIterValuesObject), descr=<Guard0x7f18ac07e2f0>) [p0, p1]
++275: p3 = getfield_gc_r(p0, descr=<FieldP pypy.objspace.std.dictmultiobject.W_BaseDictMultiIterObject.inst_iteratorimplementation 8 pure>)
++279: p4 = getfield_gc_r(p3, descr=<FieldP pypy.objspace.std.dictmultiobject.BaseIteratorImplementation.inst_w_dict 32>)
++284: guard_nonnull_class(p4, ConstClass(W_DictObject), descr=<Guard0x7f18ac07e340>) [p0, p1]
++304: i6 = getfield_gc_i(p3, descr=<FieldS pypy.objspace.std.dictmultiobject.BaseIteratorImplementation.inst_len 8>)
++309: p7 = getfield_gc_r(p4, descr=<FieldP pypy.objspace.std.dictmultiobject.W_DictObject.inst_dstrategy 16>)
++313: guard_class(p7, 139743995718904, descr=<Guard0x7f18ac06da60>) [p0, p1]
++326: p9 = getfield_gc_r(p4, descr=<FieldP pypy.objspace.std.dictmultiobject.W_DictMultiObject.inst_dstorage 8>)
++330: p10 = getfield_gc_r(p9, descr=<FieldP pypy.objspace.std.typeobject.W_TypeObject.inst_dict_w 360>)
++337: i11 = getfield_gc_i(p10, descr=<FieldS dicttable.num_live_items 8>)
++341: i12 = int_ne(i6, i11)
++344: guard_false(i12, descr=<Guard0x7f18ac06da98>) [p0, p1]
++350: i13 = getfield_gc_i(p3, descr=<FieldS pypy.objspace.std.dictmultiobject.BaseIteratorImplementation.inst_pos 16>)
++355: i14 = int_lt(i13, i6)
++358: guard_true(i14, descr=<Guard0x7f18ac06dad0>) [p0, p1]
++364: guard_class(p3, 139743995549352, descr=<Guard0x7f18ac06db08>) [p0, p1]
++378: p16 = getfield_gc_r(p3, descr=<FieldP pypy.objspace.std.dictmultiobject.IterClassValues.inst_iterator 40>)
++383: i18 = call_i(ConstClass(_ll_dictnext_look_inside_iff__dictiterPtr), p16, descr=<Calli 8 r EF=5>)
++424: guard_no_exception(descr=<Guard0x7f18ac07e390>) [p0, p1, p3, p16, i18]
++444: p19 = getfield_gc_r(p16, descr=<FieldP dictiter.dict 8>)
++455: p20 = getfield_gc_r(p19, descr=<FieldP dicttable.entries 48>)
++466: p21 = getinteriorfield_gc_r(p20, i18, descr=<InteriorFieldDescr <FieldP odictentry.value 8>>)
++471: guard_nonnull_class(p21, 139743995375872, descr=<Guard0x7f18ac07e3e0>) [p0, p1, p3, p16, i18]
++489: i24 = int_add(i13, 1)
++500: p25 = getfield_gc_r(p3, descr=<FieldP pypy.objspace.std.dictmultiobject.BaseIteratorImplementation.inst_strategy 24>)
++505: setfield_gc(p3, i24, descr=<FieldS pypy.objspace.std.dictmultiobject.BaseIteratorImplementation.inst_pos 16>)
++516: i26 = instance_ptr_eq(p25, p7)
+guard_true(i26, descr=<Guard0x7f18ac07e430>) [p0, p1, i26, p21]
++525: i27 = getfield_gc_i(p1, descr=<FieldS list.length 8>)
++536: i29 = int_add(i27, 1)
++540: p30 = getfield_gc_r(p1, descr=<FieldP list.items 16>)
++544: i31 = arraylen_gc(p30, descr=<ArrayP 8>)
++548: i32 = int_lt(i31, i29)
++551: cond_call(i32, ConstClass(_ll_list_resize_hint_really_look_inside_iff__listPtr_Signed_Bool), p1, i29, 1, descr=<Callv 0 rii EF=5>)
++557: guard_no_exception(descr=<Guard0x7f18ac07e480>) [i27, p0, p1, p21, i29]
++557: p35 = getfield_gc_r(p1, descr=<FieldP list.items 16>)
++571: setarrayitem_gc(p35, i27, p21, descr=<ArrayP 8>)
+debug_merge_point(0, 0, 'unpackiterable [dict_valueiterator]')
++576: setfield_gc(p1, i29, descr=<FieldS list.length 8>)
++580: label(p0, p1, p3, p4, p9, p10, i24, i6, p16, i29, p35, descr=TargetToken(139743941899360))
+debug_merge_point(0, 0, 'unpackiterable [dict_valueiterator]')
++592: i36 = int_lt(i24, i6)
++595: guard_true(i36, descr=<Guard0x7f18ac07e4d0>) [p0, p1, i24, i6, p3]
++601: i38 = call_i(ConstClass(_ll_dictnext_look_inside_iff__dictiterPtr), p16, descr=<Calli 8 r EF=5>)
++634: guard_no_exception(descr=<Guard0x7f18ac07e520>) [p0, p1, p3, p16, i38]
++654: p39 = getfield_gc_r(p16, descr=<FieldP dictiter.dict 8>)
++658: p40 = getfield_gc_r(p39, descr=<FieldP dicttable.entries 48>)
++669: p41 = getinteriorfield_gc_r(p40, i38, descr=<InteriorFieldDescr <FieldP odictentry.value 8>>)
++674: guard_nonnull_class(p41, 139743995375872, descr=<Guard0x7f18ac07e570>) [p0, p1, p3, p16, i38]
++692: i44 = int_add(i24, 1)
++696: i46 = int_add(i29, 1)
++707: i47 = arraylen_gc(p35, descr=<ArrayP 8>)
++718: i48 = int_lt(i47, i46)
++721: cond_call(i48, ConstClass(_ll_list_resize_hint_really_look_inside_iff__listPtr_Signed_Bool), p1, i46, 1, descr=<Callv 0 rii EF=5>)
++727: setfield_gc(p3, i44, descr=<FieldS pypy.objspace.std.dictmultiobject.BaseIteratorImplementation.inst_pos 16>)
++732: guard_no_exception(descr=<Guard0x7f18ac07e5c0>) [i29, p0, p1, p41, i46]
++752: p51 = getfield_gc_r(p1, descr=<FieldP list.items 16>)
++766: setarrayitem_gc(p51, i29, p41, descr=<ArrayP 8>)
+debug_merge_point(0, 0, 'unpackiterable [dict_valueiterator]')
++771: setfield_gc(p1, i46, descr=<FieldS list.length 8>)
++775: jump(p0, p1, p3, p4, p9, p10, i44, i6, p16, i46, p51, descr=TargetToken(139743941899360))
++784: --end of the loop--
+[1c7945c864e] jit-log-opt-loop}
+[1c794914646] {jit-log-opt-loop
+# Loop 2 (main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#4 LOAD_FAST) : loop with 70 ops
+[p0, p1]
++283: i2 = getfield_gc_i(p0, descr=<FieldS pypy.interpreter.pyframe.PyFrame.inst_last_instr 40>)
++294: p3 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_pycode 64>)
++298: i4 = getfield_gc_i(p0, descr=<FieldS pypy.interpreter.pyframe.PyFrame.inst_valuestackdepth 72>)
++302: p5 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_debugdata 16>)
++306: p6 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_lastblock 48>)
++310: p7 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_locals_cells_stack_w 56>)
++314: p9 = getarrayitem_gc_r(p7, 0, descr=<ArrayP 8>)
++318: p11 = getarrayitem_gc_r(p7, 1, descr=<ArrayP 8>)
++322: p13 = getarrayitem_gc_r(p7, 2, descr=<ArrayP 8>)
++326: p15 = getarrayitem_gc_r(p7, 3, descr=<ArrayP 8>)
++330: label(p0, p1, i2, p3, i4, p5, p6, p9, p11, p13, p15, descr=TargetToken(139743941899808))
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#4 LOAD_FAST')
++368: guard_value(i4, 1, descr=<Guard0x7f18ac07e610>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p1]
++378: guard_isnull(p5, descr=<Guard0x7f18ac06de88>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p1]
++387: guard_nonnull_class(p9, ConstClass(W_IntObject), descr=<Guard0x7f18ac07e660>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p1]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#6 LOAD_CONST')
++412: guard_value(p3, ConstPtr(ptr18), descr=<Guard0x7f18ac06dec0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p1]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#8 COMPARE_OP')
++421: i19 = getfield_gc_i(p9, descr=<FieldS pypy.objspace.std.intobject.W_IntObject.inst_intval 8 pure>)
++425: i21 = int_lt(i19, 10000000)
++432: guard_true(i21, descr=<Guard0x7f18ac06def8>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p1]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#10 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#12 LOAD_GLOBAL')
++438: guard_not_invalidated(descr=<Guard0x7f18ac06df30>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p1]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#14 LOAD_METHOD')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#16 LOAD_FAST')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#18 CALL_METHOD')
++438: p23 = getfield_gc_r(ConstPtr(ptr22), descr=<FieldP pypy.module.cpyext.methodobject.W_PyCFunctionObject.inst_w_self 64>)
++438: p24 = force_token()
++451: setfield_gc(p0, p24, descr=<FieldP pypy.interpreter.pyframe.PyFrame.vable_token 8>)
++455: i26 = call_may_force_i(139744012603904, i19, descr=<Calli 8 i EF=7>)
++539: guard_not_forced(descr=<Guard0x7f18ac02cff0>) [p0, p6, p9, p1, i26]
++550: guard_no_exception(descr=<Guard0x7f18ac06df68>) [p0, p6, p9, p1, i26]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#20 STORE_FAST')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#22 JUMP_ABSOLUTE')
++564: guard_not_invalidated(descr=<Guard0x7f18ac06dfa0>) [p0, p6, p9, p1, i26]
++564: i28 = getfield_raw_i(139744011760640, descr=<FieldS pypysig_long_struct.c_value 0>)
++571: i30 = int_sub(i28, 1)
++575: setfield_raw(139744011760640, i30, descr=<FieldS pypysig_long_struct.c_value 0>)
++582: i33 = int_lt(i30, 0)
++586: guard_false(i33, descr=<Guard0x7f18ac07e6b0>) [p0, p6, p1, i30, i26]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#4 LOAD_FAST')
++592: label(p0, p1, p6, i26, descr=TargetToken(139743941899872))
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#4 LOAD_FAST')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#6 LOAD_CONST')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#8 COMPARE_OP')
++592: i35 = int_lt(i26, 10000000)
++599: guard_true(i35, descr=<Guard0x7f18ac07e700>) [p0, p6, p1, i26]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#10 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#12 LOAD_GLOBAL')
++605: guard_not_invalidated(descr=<Guard0x7f18ac08e020>) [p0, p6, p1, i26]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#14 LOAD_METHOD')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#16 LOAD_FAST')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#18 CALL_METHOD')
++605: p37 = getfield_gc_r(ConstPtr(ptr36), descr=<FieldP pypy.module.cpyext.methodobject.W_PyCFunctionObject.inst_w_self 64>)
++605: p38 = force_token()
++626: setfield_gc(p0, p38, descr=<FieldP pypy.interpreter.pyframe.PyFrame.vable_token 8>)
++630: i40 = call_may_force_i(139744012603904, i26, descr=<Calli 8 i EF=7>)
++710: guard_not_forced(descr=<Guard0x7f18ac02d048>) [p0, p6, p1, i40, i26]
++721: guard_no_exception(descr=<Guard0x7f18ac08e058>) [p0, p6, p1, i40, i26]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#20 STORE_FAST')
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-7~#22 JUMP_ABSOLUTE')
++735: guard_not_invalidated(descr=<Guard0x7f18ac08e090>) [p0, p6, p1, i40, i26]
++735: i42 = getfield_raw_i(139744011760640, descr=<FieldS pypysig_long_struct.c_value 0>)
++742: i44 = int_sub(i42, 1)
++746: setfield_raw(139744011760640, i44, descr=<FieldS pypysig_long_struct.c_value 0>)
++753: i47 = int_lt(i44, 0)
++757: guard_false(i47, descr=<Guard0x7f18ac07e750>) [p0, p6, p1, i44, i40, None]
+debug_merge_point(0, 0, 'main;/home/max/Documents/dev/pypy-bench/ffibench.py:4-6~#4 LOAD_FAST')
++763: jump(p0, p1, p6, i40, descr=TargetToken(139743941899872))
++768: --end of the loop--
+[1c7949519b0] jit-log-opt-loop}
