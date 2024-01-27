@@ -74,7 +74,7 @@ static PyMethodDef signature_methods[] = {
 static PyMethodDef signature_methods[] = {
     {"inc", inc, METH_O, "Add one to an int"},
     {"wrong", inc, METH_O, "Have a silly signature"},
-    {"add", add, METH_FASTCALL, "Add two doubles"},
+    {"add", (PyCFunction)(void*)add, METH_FASTCALL, "Add two doubles"},
     {NULL, NULL, 0, NULL}};
 #endif
 
