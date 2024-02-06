@@ -1,12 +1,11 @@
 import setuptools
-from distutils.core import Extension
 
 setuptools.setup(
     name="ffibench",
     version="0.0.1",
     description="",
     ext_modules=[
-        Extension(
+        setuptools.Extension(
             "signature", sources=["signature.c"],
             extra_compile_args=['-std=c99', '-Wall', '-Wextra'],
             language='c',
