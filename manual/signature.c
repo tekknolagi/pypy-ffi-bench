@@ -75,10 +75,60 @@ static struct PyModuleDef signature_definition = {
     NULL,
     NULL};
 
+typedef struct {
+    PyObject_HEAD
+    Py_ssize_t cur;
+    Py_ssize_t end;
+} RangeIterator;
+
+static int RangeIterator_init(RangeIterator *self, PyObject *args, PyObject *kwds) {
+    static char *kwlist[] = {"end", NULL};
+    self->cur = 0;
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|i", kwlist,
+                                     &self->end)) {
+        return -1;
+    }
+    return 0;
+}
+
+static PyObject * RangeIterator_iternext(RangeIterator *it) {
+  if (it->cur == it->end) {
+    // Implicit StopIteration raise.
+    return NULL;
+  }
+  long result = it->cur;
+  it->cur++;
+  return PyLong_FromLong(result);
+}
+
+static PyTypeObject RangeIteratorType = {
+    .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "signature.RangeIterator",
+    .tp_doc = PyDoc_STR("RangeIterator object"),
+    .tp_basicsize = sizeof(RangeIterator),
+    .tp_itemsize = 0,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_new = PyType_GenericNew,
+    .tp_init = (initproc) RangeIterator_init,
+    .tp_iter = PyObject_SelfIter,
+    .tp_iternext = (iternextfunc)RangeIterator_iternext,
+};
+
 PyMODINIT_FUNC PyInit_signature(void) {
-  // PyObject* result = PyState_FindModule(&signature_definition);
-  // if (result != NULL) {
-  //   return Py_NewRef(result);
-  // }
-  return PyModule_Create(&signature_definition);
+  PyObject* result = PyModule_Create(&signature_definition);
+  if (result == NULL) {
+    return NULL;
+  }
+  // TODO(max): What is that other heap type init function?
+  if (PyType_Ready(&RangeIteratorType) < 0) {
+    Py_DECREF(result);
+    return NULL;
+  }
+  Py_INCREF(&RangeIteratorType);
+  if (PyModule_AddObject(result, "RangeIterator", (PyObject *) &RangeIteratorType) < 0) {
+    Py_DECREF(result);
+    Py_DECREF(&RangeIteratorType);
+    return NULL;
+  }
+  return result;
 }
