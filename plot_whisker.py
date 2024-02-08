@@ -31,7 +31,7 @@ with open(args.file) as f:
 if args.labels:
     labels = args.labels.split(",")
 else:
-    labels = [b["command"] for b in results]
+    labels = [b["command"].split(" ")[0] for b in results]
 times = [b["times"] for b in results]
 
 boxplot = plt.boxplot(times, vert=True, patch_artist=True)
@@ -43,7 +43,6 @@ for patch, color in zip(boxplot["boxes"], colors):
 
 if args.title:
     plt.title(args.title)
-plt.legend(handles=boxplot["boxes"], labels=labels, loc="best", fontsize="medium")
 plt.subplots_adjust(bottom=0.20)
 plt.xticks(range(1,len(labels)+1), labels, rotation=45)
 plt.ylabel("Time [s]")
