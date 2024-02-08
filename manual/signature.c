@@ -91,6 +91,8 @@ static int RangeIterator_init(RangeIterator *self, PyObject *args, PyObject *kwd
     return 0;
 }
 
+// TODO(max): Perhaps we can figure out a way to make this return a C int and
+// pass that through to PyPy even though it is not a normal PyMethodDef.
 static PyObject * RangeIterator_iternext(RangeIterator *it) {
   if (it->cur == it->end) {
     // Implicit StopIteration raise.
