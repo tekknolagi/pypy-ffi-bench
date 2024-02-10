@@ -5,7 +5,8 @@ def main():
     i = 0
     obj = object()
     while i < 500_000_000:
-        i = signature.takes_object(obj, i)
+        signature.meth_o_object(obj)
+        i += 1
     return i
 
 
