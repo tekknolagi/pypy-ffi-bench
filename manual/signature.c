@@ -81,7 +81,6 @@ PyObject* takes_object(PyObject* module, PyObject*const *args, Py_ssize_t nargs)
 PyObject* meth_o_object_impl(PyObject* arg) {
   Py_INCREF(arg);
   return arg;
-  // return PyObject_NewRef(arg);
 }
 
 PyObject* meth_o_object(PyObject* module, PyObject* arg) {
@@ -133,74 +132,6 @@ static struct PyModuleDef signature_definition = {
     NULL,
     NULL};
 
-/*
-typedef struct {
-    PyObject_HEAD
-    Py_ssize_t cur;
-    Py_ssize_t end;
-} RangeIterator;
-
-static int RangeIterator_init(RangeIterator *self, PyObject *args, PyObject *kwds) {
-    static char *kwlist[] = {"end", NULL};
-    self->cur = 0;
-    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|i", kwlist,
-                                     &self->end)) {
-        return -1;
-    }
-    return 0;
-}
-
-// TODO(max): Perhaps we can figure out a way to make this return a C int and
-// pass that through to PyPy even though it is not a normal PyMethodDef.
-static PyObject * RangeIterator_iternext(RangeIterator *it) {
-  if (it->cur == it->end) {
-    // Implicit StopIteration raise.
-    return NULL;
-  }
-  long result = it->cur;
-  it->cur++;
-  return PyLong_FromLong(result);
-}
-
-SIG(RangeIterator_iternext, -1, T_C_LONG)
-
-static PyMethodDef RangeIterator_methods[] = {
-  // TYPED_SIG(__iter__, RangeIterator_iter, METH_NOARGS, ""),
-  {"__iter__", PyObject_SelfIter, METH_NOARGS, ""},
-  TYPED_SIG(__next__, RangeIterator_iternext, METH_NOARGS, ""),
-  {NULL, NULL, 0, NULL},
-};
-
-static PyTypeObject RangeIteratorType = {
-    .ob_base = PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "signature.RangeIterator",
-    .tp_doc = PyDoc_STR("RangeIterator object"),
-    .tp_basicsize = sizeof(RangeIterator),
-    .tp_itemsize = 0,
-    .tp_methods = RangeIterator_methods,
-    .tp_flags = Py_TPFLAGS_DEFAULT,
-    .tp_new = PyType_GenericNew,
-    .tp_init = (initproc) RangeIterator_init,
-    // .tp_iter = PyObject_SelfIter,
-    // .tp_iternext = (iternextfunc)RangeIterator_iternext,
-};
-*/
-
 PyMODINIT_FUNC PyInit_signature(void) {
-  PyObject* result = PyModule_Create(&signature_definition);
-  if (result == NULL) {
-    return NULL;
-  }
-  // // TODO(max): What is that other heap type init function?
-  // if (PyType_Ready(&RangeIteratorType) < 0) {
-  //   Py_DECREF(result);
-  //   return NULL;
-  // }
-  // Py_INCREF(&RangeIteratorType);
-  // if (PyModule_AddObject(result, "RangeIterator", (PyObject *) &RangeIteratorType) < 0) {
-  //   Py_DECREF(result);
-  //   Py_DECREF(&RangeIteratorType);
-  //   return NULL;
-  // }
-  return result;
+  return PyModule_Create(&signature_definition);
 }
