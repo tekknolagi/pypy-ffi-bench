@@ -53,28 +53,30 @@ def run(
         raise
 
 
-ALL_RUNTIMES = [
-    "pypy3.8",
-    "pypy3.10",
-    "python3.8",
-    "python3.10",
-    "python3.11",
-    "python3.12",
-    "python3.13",
-    "graalpy22",
-    "graalpy23",
-]
-
 RUNTIME_PATHS = {
-    "pypy3.8": "~/.pyenv/versions/pypy3.8-7.3.11/bin/python3",
+    "graalpy22": "~/.pyenv/versions/graalpython-22.2.0/bin/graalpython",
+    "graalpy23": "~/.pyenv/versions/graalpy-community-23.1.0/bin/python3",
     "pypy3.10": "~/.pyenv/versions/pypy3.10-7.3.15/bin/pypy3.10",
     "pypy3.10-new": "~/Documents/dev/pypy-git/pypy/goal/pypy3.10-c",
+    "pypy3.8": "~/.pyenv/versions/pypy3.8-7.3.11/bin/python3",
+    "python3.10": "/usr/bin/python3.10",
+    "python3.11": "/usr/bin/python3.11",
+    "python3.12": "/usr/bin/python3.12",
+    "python3.13": "/usr/bin/python3.13",
+    "python3.8": "/usr/bin/python3.8",
 }
 
 
 def run_benchmark(args):
     benchmark = args.benchmark
+    num_iterations = args.num_iterations
     runtimes = [RUNTIME_PATHS[runtime] for runtime in args.runtimes]
+    if num_iterations < 1_000_000_000 and any(
+        "graal" in runtime for runtime in args.runtimes
+    ):
+        print(
+            f"WARNING: Graal will likely not get a chance to warm up with {num_iterations} iterations"
+        )
     run(
         [
             "hyperfine",
@@ -95,7 +97,7 @@ def run_benchmark(args):
             "--runs",
             "3",
             #
-            f"taskset -c 0 {{runtime}} {args.runtime_options} {benchmark}.py {args.num_iterations}",
+            f"taskset -c 0 {{runtime}} {args.runtime_options} {benchmark}.py {num_iterations}",
         ],
         verbose=True,
     )
@@ -109,7 +111,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("benchmark", choices=["ffibench", "objbench", "idbench"])
     parser.add_argument("--num-iterations", type=int, required=True)
-    parser.add_argument("--runtimes", default=ALL_RUNTIMES, type=parse_runtimes)
+    parser.add_argument(
+        "--runtimes", default=sorted(RUNTIME_PATHS.keys()), type=parse_runtimes
+    )
     parser.add_argument("--runtime-options", default="")
     args = parser.parse_args()
     run_benchmark(args)
