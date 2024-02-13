@@ -80,8 +80,7 @@ def human_format(num):
     )
 
 
-def run_benchmark(args):
-    benchmark = args.benchmark
+def run_benchmark(args, benchmark):
     num_iterations = args.num_iterations
     outdir = args.output
     runtimes = [RUNTIME_PATHS[runtime] for runtime in args.runtimes]
@@ -139,14 +138,26 @@ def run_benchmark(args):
         )
 
 
+def run_benchmarks(args):
+    for benchmark in args.benchmark:
+        run_benchmark(args, benchmark)
+
+
 def parse_runtimes(comma_separated):
     return comma_separated.split(",")
+
+
+BENCHMARKS = ["ffibench", "objbench", "idbench", "idbench_exc"]
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "benchmark", choices=["ffibench", "objbench", "idbench", "idbench_exc"]
+        "benchmark",
+        # TODO(max): Figure out how to get the choices to render and also limit
+        # input without also converting to nargs='+' implicitly
+        # choices=BENCHMARKS,
+        nargs="*",
     )
     parser.add_argument("--num-iterations", type=int, required=True)
     parser.add_argument(
@@ -156,7 +167,9 @@ def main():
     parser.add_argument("--output", default="out")
     parser.add_argument("--plot", type=bool, default=True)
     args = parser.parse_args()
-    run_benchmark(args)
+    if not args.benchmark:
+        args.benchmark = BENCHMARKS
+    run_benchmarks(args)
 
 
 if __name__ == "__main__":
