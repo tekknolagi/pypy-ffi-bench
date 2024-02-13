@@ -1,4 +1,5 @@
 import argparse
+import pathlib
 import shlex
 import subprocess
 import sys
@@ -67,31 +68,46 @@ RUNTIME_PATHS = {
 }
 
 
+def human_format(num):
+    "https://stackoverflow.com/a/45846841/569183"
+    num = float("{:.3g}".format(num))
+    magnitude = 0
+    while abs(num) >= 1000:
+        magnitude += 1
+        num /= 1000.0
+    return "{}{}".format(
+        "{:f}".format(num).rstrip("0").rstrip("."), ["", "K", "M", "B", "T"][magnitude]
+    )
+
+
 def run_benchmark(args):
     benchmark = args.benchmark
     num_iterations = args.num_iterations
     outdir = args.output
     runtimes = [RUNTIME_PATHS[runtime] for runtime in args.runtimes]
+    comma_runtime_paths = ",".join(runtimes)
+    comma_runtime_names = ",".join(runtime for runtime in args.runtimes)
     if num_iterations < 1_000_000_000 and any(
         "graal" in runtime for runtime in args.runtimes
     ):
         print(
             f"WARNING: Graal will likely not get a chance to warm up with {num_iterations} iterations"
         )
-    run(["mkdir", "-p", "results"])
+    run(["mkdir", "-p", outdir])
+    json_output = f"{outdir}/results-{benchmark}.json"
     run(
         [
             "hyperfine",
             #
             "--export-json",
-            f"{outdir}/results-{benchmark}.json",
+            json_output,
             #
             "--export-markdown",
             f"{outdir}/results-{benchmark}.md",
             #
             "-L",
             "runtime",
-            ",".join(runtimes),
+            comma_runtime_paths,
             #
             "--setup",
             "rm -rf *.so && {runtime} setup.py build_ext --inplace",
@@ -103,6 +119,21 @@ def run_benchmark(args):
         ],
         verbose=True,
     )
+    if args.plot:
+        root = pathlib.Path(__file__).parent / ".."
+        run(
+            [
+                sys.executable,
+                str(root / "plot_whisker.py"),
+                "--labels",
+                comma_runtime_names,
+                "--title",
+                f"Time for {benchmark} with {human_format(num_iterations)} iterations",
+                "--output",
+                f"{outdir}/results-{benchmark}.png",
+                json_output,
+            ]
+        )
 
 
 def parse_runtimes(comma_separated):
@@ -118,6 +149,7 @@ def main():
     )
     parser.add_argument("--runtime-options", default="")
     parser.add_argument("--output", default="out")
+    parser.add_argument("--plot", type=bool, default=True)
     args = parser.parse_args()
     run_benchmark(args)
 
