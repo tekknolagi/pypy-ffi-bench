@@ -70,6 +70,7 @@ RUNTIME_PATHS = {
 def run_benchmark(args):
     benchmark = args.benchmark
     num_iterations = args.num_iterations
+    outdir = args.output
     runtimes = [RUNTIME_PATHS[runtime] for runtime in args.runtimes]
     if num_iterations < 1_000_000_000 and any(
         "graal" in runtime for runtime in args.runtimes
@@ -77,15 +78,16 @@ def run_benchmark(args):
         print(
             f"WARNING: Graal will likely not get a chance to warm up with {num_iterations} iterations"
         )
+    run(["mkdir", "-p", "results"])
     run(
         [
             "hyperfine",
             #
             "--export-json",
-            f"results-{benchmark}.json",
+            f"{outdir}/results-{benchmark}.json",
             #
             "--export-markdown",
-            f"results-{benchmark}.md",
+            f"{outdir}/results-{benchmark}.md",
             #
             "-L",
             "runtime",
@@ -115,6 +117,7 @@ def main():
         "--runtimes", default=sorted(RUNTIME_PATHS.keys()), type=parse_runtimes
     )
     parser.add_argument("--runtime-options", default="")
+    parser.add_argument("--output", default="out")
     args = parser.parse_args()
     run_benchmark(args)
 
