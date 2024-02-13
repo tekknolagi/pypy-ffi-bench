@@ -91,7 +91,7 @@ def run_benchmark(args):
         "graal" in runtime for runtime in args.runtimes
     ):
         print(
-            f"WARNING: Graal will likely not get a chance to warm up with {num_iterations} iterations"
+            f"WARNING: Graal will likely not get a chance to warm up with {human_format(num_iterations)} iterations"
         )
     run(["mkdir", "-p", outdir])
     json_output = f"{outdir}/results-{benchmark}.json"
