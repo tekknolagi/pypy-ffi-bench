@@ -120,6 +120,9 @@ def run_benchmark(args):
         verbose=True,
     )
     if args.plot:
+        title = f"Time for {benchmark} with {human_format(num_iterations)} iterations"
+        if args.runtime_options:
+            title += f" ({args.runtime_options})"
         root = pathlib.Path(__file__).parent / ".."
         run(
             [
@@ -128,7 +131,7 @@ def run_benchmark(args):
                 "--labels",
                 comma_runtime_names,
                 "--title",
-                f"Time for {benchmark} with {human_format(num_iterations)} iterations",
+                title,
                 "--output",
                 f"{outdir}/results-{benchmark}.png",
                 json_output,
