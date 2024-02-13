@@ -145,7 +145,7 @@ def parse_runtimes(comma_separated):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("benchmark", choices=["ffibench", "objbench", "idbench"])
+    parser.add_argument("benchmark", choices=["ffibench", "objbench", "idbench", "idbench_exc"])
     parser.add_argument("--num-iterations", type=int, required=True)
     parser.add_argument(
         "--runtimes", default=sorted(RUNTIME_PATHS.keys()), type=parse_runtimes

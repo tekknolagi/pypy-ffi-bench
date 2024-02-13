@@ -88,6 +88,11 @@ PyObject* meth_o_object(PyObject* module, PyObject* arg) {
   return meth_o_object_impl(arg);
 }
 
+PyObject* meth_o_object_may_raise_impl(PyObject* arg) {
+  Py_INCREF(arg);
+  return arg;
+}
+
 #ifdef METH_TYPED
 #define LIST(...) __VA_ARGS__
 
@@ -113,6 +118,7 @@ SIG(inc_might_raise, LIST(T_C_LONG), -T_C_LONG)
 SIG(add, LIST(T_C_DOUBLE, T_C_DOUBLE), T_C_DOUBLE)
 SIG(takes_object, LIST(T_PY_OBJECT, T_C_LONG), T_C_LONG)
 SIG(meth_o_object, LIST(T_PY_OBJECT), T_PY_OBJECT)
+SIG(meth_o_object_may_raise, LIST(T_PY_OBJECT), -T_PY_OBJECT)
 
 static PyMethodDef signature_methods[] = {
   TYPED_SIG(inc, inc, METH_O, "Add one to an int"),
@@ -120,6 +126,7 @@ static PyMethodDef signature_methods[] = {
   TYPED_SIG(add, add, METH_FASTCALL, "Add two doubles"),
   TYPED_SIG(takes_object, takes_object, METH_FASTCALL, "Takes an object and an int and increments the int"),
   TYPED_SIG(meth_o_object, meth_o_object, METH_O, "id(x)"),
+  TYPED_SIG(meth_o_object_may_raise, meth_o_object, METH_O, "id(x)"),
   {NULL, NULL, 0, NULL},
 };
 
