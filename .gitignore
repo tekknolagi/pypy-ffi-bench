@@ -1,2 +1,4 @@
 build/
+manual/build/
 *.so
+manual/out/
