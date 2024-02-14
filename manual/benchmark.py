@@ -163,12 +163,19 @@ def main():
     parser.add_argument(
         "--runtimes", default=sorted(RUNTIME_PATHS.keys()), type=parse_runtimes
     )
+    parser.add_argument(
+        "--graalpy23", action=argparse.BooleanOptionalAction, default=False
+    )
     parser.add_argument("--runtime-options", default="")
     parser.add_argument("--output", default="out")
     parser.add_argument('--plot', action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
     if not args.benchmark:
         args.benchmark = BENCHMARKS
+    if not args.graalpy23:
+        args.runtimes = [
+            runtime for runtime in args.runtimes if "graalpy23" not in runtime
+        ]
     run_benchmarks(args)
 
 
