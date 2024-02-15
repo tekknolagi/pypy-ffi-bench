@@ -168,7 +168,8 @@ def main():
     )
     parser.add_argument("--runtime-options", default="")
     parser.add_argument("--output", default="out")
-    parser.add_argument("--plot", action=argparse.BooleanOptionalAction)
+    parser.add_argument("--plot", action=argparse.BooleanOptionalAction,
+                        default=True)
     args = parser.parse_args()
     if not args.benchmark:
         args.benchmark = BENCHMARKS
