@@ -107,8 +107,12 @@ def run_benchmark(args, benchmark):
                 "runtime",
                 comma_runtime_paths,
                 #
+                # zsh and bash will fail on non-existent globs for e.g. *.so
+                "--shell",
+                "/usr/bin/sh",
+                #
                 "--setup",
-                "rm -rf *.so && {runtime} setup.py build_ext --inplace",
+                "rm -rf *.so build && {runtime} setup.py build_ext --inplace",
                 #
                 "--runs",
                 "3",
