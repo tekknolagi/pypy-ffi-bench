@@ -94,31 +94,32 @@ def run_benchmark(args, benchmark):
         )
     run(["mkdir", "-p", outdir])
     json_output = f"{outdir}/results-{benchmark}.json"
-    run(
-        [
-            "hyperfine",
-            #
-            "--export-json",
-            json_output,
-            #
-            "--export-markdown",
-            f"{outdir}/results-{benchmark}.md",
-            #
-            "-L",
-            "runtime",
-            comma_runtime_paths,
-            #
-            "--setup",
-            "rm -rf *.so && {runtime} setup.py build_ext --inplace",
-            #
-            "--runs",
-            "3",
-            #
-            f"taskset -c 0 {{runtime}} {args.runtime_options} {benchmark}.py {num_iterations}",
-        ],
-        verbose=True,
-    )
-    if args.plot:
+    if not args.plot_only:
+        run(
+            [
+                "hyperfine",
+                #
+                "--export-json",
+                json_output,
+                #
+                "--export-markdown",
+                f"{outdir}/results-{benchmark}.md",
+                #
+                "-L",
+                "runtime",
+                comma_runtime_paths,
+                #
+                "--setup",
+                "rm -rf *.so && {runtime} setup.py build_ext --inplace",
+                #
+                "--runs",
+                "3",
+                #
+                f"taskset -c 0 {{runtime}} {args.runtime_options} {benchmark}.py {num_iterations}",
+            ],
+            verbose=True,
+        )
+    if args.plot or args.plot_only:
         title = f"Time for {benchmark} with {human_format(num_iterations)} iterations"
         if args.runtime_options:
             title += f" ({args.runtime_options})"
@@ -170,6 +171,8 @@ def main():
     parser.add_argument("--output", default="out")
     parser.add_argument("--plot", action=argparse.BooleanOptionalAction,
                         default=True)
+    parser.add_argument("--plot-only", action=argparse.BooleanOptionalAction,
+                        default=False)
     args = parser.parse_args()
     if not args.benchmark:
         args.benchmark = BENCHMARKS
