@@ -91,7 +91,11 @@ def run_benchmark(args, benchmark):
             f"WARNING: Graal will likely not get a chance to warm up with {human_format(num_iterations)} iterations"
         )
     run(["mkdir", "-p", outdir])
-    json_output = f"{outdir}/results-{benchmark}.json"
+    if args.runtime_options:
+        runtime_options = args.runtime_options.replace(" ", "_")
+    else:
+        runtime_options = ""
+    json_output = f"{outdir}/results-{benchmark}{runtime_options}.json"
     if not args.plot_only:
         run(
             [
@@ -101,7 +105,7 @@ def run_benchmark(args, benchmark):
                 json_output,
                 #
                 "--export-markdown",
-                f"{outdir}/results-{benchmark}.md",
+                f"{outdir}/results-{benchmark}{runtime_options}.md",
                 #
                 "-L",
                 "runtime",
@@ -135,7 +139,7 @@ def run_benchmark(args, benchmark):
                 "--title",
                 title,
                 "--output",
-                f"{outdir}/results-{benchmark}.png",
+                f"{outdir}/results-{benchmark}{runtime_options}.png",
                 json_output,
             ]
         )
