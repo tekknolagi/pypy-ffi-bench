@@ -126,7 +126,7 @@ def run_benchmark(args, benchmark):
             verbose=True,
         )
     if args.plot or args.plot_only:
-        title = f"Time for {benchmark} with {human_format(num_iterations)} iterations"
+        title = f"Time for {benchmark} with {human_format(num_iterations)} iterations (lower is better)"
         if args.runtime_options:
             title += f" ({args.runtime_options})"
         root = pathlib.Path(__file__).parent / ".."
