@@ -83,12 +83,10 @@ def human_format(num):
 def run_benchmark(args, benchmark):
     num_iterations = args.num_iterations
     outdir = args.output
-    runtimes = [RUNTIME_PATHS[runtime] for runtime in args.runtimes]
-    comma_runtime_paths = ",".join(runtimes)
-    comma_runtime_names = ",".join(runtime for runtime in args.runtimes)
-    if num_iterations < 1_000_000_000 and any(
-        "graal" in runtime for runtime in args.runtimes
-    ):
+    runtimes = sorted(args.runtimes)
+    comma_runtime_paths = ",".join(RUNTIME_PATHS[runtime] for runtime in runtimes)
+    comma_runtime_names = ",".join(runtimes)
+    if num_iterations < 1_000_000_000 and "graal" in comma_runtime_names:
         print(
             f"WARNING: Graal will likely not get a chance to warm up with {human_format(num_iterations)} iterations"
         )
@@ -161,18 +159,16 @@ def main():
         nargs="*",
     )
     parser.add_argument("--num-iterations", type=int, required=True)
-    parser.add_argument(
-        "--runtimes", default=sorted(RUNTIME_PATHS.keys()), type=parse_runtimes
-    )
+    parser.add_argument("--runtimes", default=RUNTIME_PATHS.keys(), type=parse_runtimes)
     parser.add_argument(
         "--graalpy23", action=argparse.BooleanOptionalAction, default=False
     )
     parser.add_argument("--runtime-options", default="")
     parser.add_argument("--output", default="out")
-    parser.add_argument("--plot", action=argparse.BooleanOptionalAction,
-                        default=True)
-    parser.add_argument("--plot-only", action=argparse.BooleanOptionalAction,
-                        default=False)
+    parser.add_argument("--plot", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument(
+        "--plot-only", action=argparse.BooleanOptionalAction, default=False
+    )
     args = parser.parse_args()
     if not args.benchmark:
         args.benchmark = BENCHMARKS
