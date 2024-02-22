@@ -45,12 +45,12 @@ PyObject* add(PyObject* module, PyObject*const *args, Py_ssize_t nargs) {
     return PyErr_Format(PyExc_TypeError, "add expected 2 arguments but got %ld", nargs);
   }
   if (!PyFloat_CheckExact(args[0])) {
-    return PyErr_Format(PyExc_TypeError, "add expected float but got %s", Py_TYPE(args[0])->tp_name);
+    return PyErr_Format(PyExc_TypeError, "add expected float but got %S", Py_TYPE(args[0]));
   }
   double left = PyFloat_AsDouble(args[0]);
   if (PyErr_Occurred()) return NULL;
   if (!PyFloat_CheckExact(args[1])) {
-    return PyErr_Format(PyExc_TypeError, "add expected float but got %s", Py_TYPE(args[1])->tp_name);
+    return PyErr_Format(PyExc_TypeError, "add expected float but got %S", Py_TYPE(args[1]));
   }
   double right = PyFloat_AsDouble(args[1]);
   if (PyErr_Occurred()) return NULL;
