@@ -22,6 +22,7 @@ parser.add_argument(
 parser.add_argument(
     "-o", "--output", help="Save image to the given filename."
 )
+parser.add_argument("--dpi", type=int, default=300, help="Resolution in dots per inch (DPI)")
 
 args = parser.parse_args()
 
@@ -48,6 +49,6 @@ plt.xticks(range(1,len(labels)+1), labels, rotation=45)
 plt.ylabel("Time [s]")
 plt.ylim(0, None)
 if args.output:
-    plt.savefig(args.output)
+    plt.savefig(args.output, dpi=args.dpi)
 else:
     plt.show()

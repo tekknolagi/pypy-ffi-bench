@@ -140,6 +140,8 @@ def run_benchmark(args, benchmark):
                 title,
                 "--output",
                 f"{outdir}/results-{benchmark}{runtime_options}.png",
+                "--dpi",
+                str(args.dpi),
                 json_output,
             ]
         )
@@ -176,6 +178,9 @@ def main():
     parser.add_argument("--plot", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument(
         "--plot-only", action=argparse.BooleanOptionalAction, default=False
+    )
+    parser.add_argument(
+        "--dpi", type=int, default=300, help="Resolution in dots per inch (DPI)"
     )
     args = parser.parse_args()
     if not args.benchmark:
