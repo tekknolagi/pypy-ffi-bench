@@ -2,8 +2,8 @@
 set -eux
 out=out-nojit
 python3 benchmark.py --runtimes pypy3.10-new,pypy3.10 --num-iterations 10_000_000 --output "$out" --runtime-options="--jit off"
-python3 ../plot_whisker_multi.py --suptitle "Times for 10MM iterations with JIT off; lower is better" \
-  --output "$out"/results-jit-off-multi.png --labels "pypy3.10,pypy3.10-new" \
+python3 ../plot_whisker_multi.py --suptitle "Times for 10MM iterations with JIT off (lower is better)" \
+  --output "$out"/results-jit-off-multi.png --labels "pypy3.10,pypy3.10-new" --dpi 300 \
   "$out"/results-ffibench--jit_off.json \
   "$out"/results-objbench--jit_off.json \
   "$out"/results-idbench--jit_off.json \

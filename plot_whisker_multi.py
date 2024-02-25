@@ -26,6 +26,7 @@ parser.add_argument(
 parser.add_argument(
     "-o", "--output", help="Save image to the given filename."
 )
+parser.add_argument("--dpi", type=int, default=300, help="Resolution in dots per inch (DPI)")
 
 args = parser.parse_args()
 assert len(args.files) == 4, f"Don't know how to lay out {len(args.files)} plots"
@@ -58,6 +59,6 @@ for idx, datum in enumerate(data):
 fig.supylabel("Time [s]")
 plt.ylim(0, None)
 if args.output:
-    plt.savefig(args.output)
+    plt.savefig(args.output, dpi=args.dpi)
 else:
     plt.show()
