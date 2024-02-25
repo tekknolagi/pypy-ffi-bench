@@ -18,7 +18,8 @@ import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("files", nargs='+', help="JSON file with benchmark results")
-parser.add_argument("--title", default=[], action="append", help="Plot Title")
+parser.add_argument("--suptitle", type=str, help="Overall plot title")
+parser.add_argument("--title", default=[], action="append", help="Smaller plot titles")
 parser.add_argument(
     "--labels", help="Comma-separated list of entries for the plot legend"
 )
@@ -46,6 +47,7 @@ def load_data(filename):
 
 data = [load_data(filename) for filename in args.files]
 fig, axs = plt.subplots(2, 2, sharey=True, sharex=True)
+fig.suptitle(args.suptitle)
 for idx, datum in enumerate(data):
     times, labels = data[idx]
     ax = axs.flat[idx]
