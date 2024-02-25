@@ -107,18 +107,20 @@ PyObject* meth_o_object_may_raise_impl(PyObject* arg) {
 
 #define TYPED_SIG(name, fptr, type, doc) \
   {name##_sig.ml_name, (PyCFunction)(void*)fptr, type | METH_TYPED, doc}
+#define MAY_RAISE(ty) - ty
 #else
 #define SIG(...)
 #define TYPED_SIG(name, fptr, type, doc) \
   {#name, (PyCFunction)(void*)fptr, type, doc}
+#define MAY_RAISE(ty)
 #endif
 
 SIG(inc, LIST(T_C_LONG), T_C_LONG)
-SIG(inc_might_raise, LIST(T_C_LONG), -T_C_LONG)
+SIG(inc_might_raise, LIST(T_C_LONG), MAY_RAISE(T_C_LONG))
 SIG(add, LIST(T_C_DOUBLE, T_C_DOUBLE), T_C_DOUBLE)
 SIG(takes_object, LIST(T_PY_OBJECT, T_C_LONG), T_C_LONG)
 SIG(meth_o_object, LIST(T_PY_OBJECT), T_PY_OBJECT)
-SIG(meth_o_object_may_raise, LIST(T_PY_OBJECT), -T_PY_OBJECT)
+SIG(meth_o_object_may_raise, LIST(T_PY_OBJECT), MAY_RAISE(T_PY_OBJECT))
 
 static PyMethodDef signature_methods[] = {
   TYPED_SIG(inc, inc, METH_O, "Add one to an int"),
