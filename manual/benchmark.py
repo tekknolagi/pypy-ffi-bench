@@ -1,8 +1,10 @@
 import argparse
+import json
 import pathlib
 import shlex
 import subprocess
 import sys
+import tempfile
 import textwrap
 
 
@@ -68,6 +70,22 @@ RUNTIME_PATHS = {
 }
 
 
+def filter_runtimes(runtimes, results_json):
+    runtime_paths = set(RUNTIME_PATHS[runtime] for runtime in runtimes)
+    with open(results_json, "r") as f:
+        results = json.load(f)
+    assert isinstance(results, dict)
+    results = results["results"]
+    filtered = []
+    for result in results:
+        runtime_path = result["parameters"]["runtime"]
+        if runtime_path in runtime_paths:
+            filtered.append(result)
+    with tempfile.NamedTemporaryFile(mode='w+', suffix='.json', delete=False) as f:
+        json.dump({"results": filtered}, f, indent=2)
+        return f.name
+
+
 def human_format(num):
     "https://stackoverflow.com/a/45846841/569183"
     num = float("{:.3g}".format(num))
@@ -128,12 +146,13 @@ def run_benchmark(args, benchmark):
 
 
 def plot_single(args, benchmark):
+    runtimes = args.runtimes
     outdir = args.output
     if args.runtime_options:
         runtime_options = args.runtime_options.replace(" ", "_")
     else:
         runtime_options = ""
-    json_output = f"{outdir}/results-{benchmark}{runtime_options}.json"
+    json_output = filter_runtimes(runtimes, f"{outdir}/results-{benchmark}{runtime_options}.json")
     with open(json_output, "r") as f:
         results_json = json.load(f)
         num_iterations = set(result["command"].split()[-1] for result in results_json["results"])
