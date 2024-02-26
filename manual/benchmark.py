@@ -134,7 +134,12 @@ def plot_single(args, benchmark):
     else:
         runtime_options = ""
     json_output = f"{outdir}/results-{benchmark}{runtime_options}.json"
-    title = f"Time for {benchmark} with {human_format(args.num_iterations)} iterations (lower is better)"
+    with open(json_output, "r") as f:
+        results_json = json.load(f)
+        num_iterations = set(result["command"].split()[-1] for result in results_json["results"])
+        assert len(num_iterations) == 1, "Benchmarks run for different iteration counts"
+        num_iterations = int(num_iterations.pop())
+    title = f"Time for {benchmark} with {human_format(num_iterations)} iterations (lower is better)"
     if args.runtime_options:
         title += f" ({args.runtime_options})"
     root = pathlib.Path(__file__).parent / ".."
@@ -143,7 +148,7 @@ def plot_single(args, benchmark):
             sys.executable,
             str(root / "plot_whisker.py"),
             "--labels",
-            ",".join(args.runtimes),
+            ",".join(runtimes),
             "--title",
             title,
             "--output",
@@ -181,7 +186,7 @@ def main():
         # choices=BENCHMARKS,
         nargs="*",
     )
-    parser.add_argument("--num-iterations", type=int, required=True)
+    parser.add_argument("--num-iterations", type=int, default=1_000_000_000)
     parser.add_argument("--runtimes", default=RUNTIME_PATHS.keys(), type=parse_runtimes)
     parser.add_argument(
         "--graalpy23", action=argparse.BooleanOptionalAction, default=False
