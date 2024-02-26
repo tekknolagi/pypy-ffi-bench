@@ -53,9 +53,10 @@ for idx, datum in enumerate(data):
     times, labels = data[idx]
     ax = axs.flat[idx]
     ax.boxplot(times, vert=True, patch_artist=True)
-    ax.set_xticks(range(1,len(labels)+1), labels)
+    ax.set_xticks(range(1,len(labels)+1), labels, rotation=45)
     ax.set_title(args.title[idx])
 
+plt.subplots_adjust(bottom=0.20)
 fig.supylabel("Time [s]")
 plt.ylim(0, None)
 if args.output:

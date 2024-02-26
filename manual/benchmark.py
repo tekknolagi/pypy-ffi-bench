@@ -145,19 +145,23 @@ def run_benchmark(args, benchmark):
         )
 
 
+def extract_num_iterations(json_output):
+    with open(json_output, "r") as f:
+        results_json = json.load(f)
+        num_iterations = set(result["command"].split()[-1] for result in results_json["results"])
+        assert len(num_iterations) == 1, "Benchmarks run for different iteration counts"
+        return int(num_iterations.pop())
+
+
 def plot_single(args, benchmark):
-    runtimes = args.runtimes
+    runtimes = sorted(args.runtimes)
     outdir = args.output
     if args.runtime_options:
         runtime_options = args.runtime_options.replace(" ", "_")
     else:
         runtime_options = ""
     json_output = filter_runtimes(runtimes, f"{outdir}/results-{benchmark}{runtime_options}.json")
-    with open(json_output, "r") as f:
-        results_json = json.load(f)
-        num_iterations = set(result["command"].split()[-1] for result in results_json["results"])
-        assert len(num_iterations) == 1, "Benchmarks run for different iteration counts"
-        num_iterations = int(num_iterations.pop())
+    num_iterations = extract_num_iterations(json_output)
     title = f"Time for {benchmark} with {human_format(num_iterations)} iterations (lower is better)"
     if args.runtime_options:
         title += f" ({args.runtime_options})"
@@ -175,6 +179,41 @@ def plot_single(args, benchmark):
             "--dpi",
             str(args.dpi),
             json_output,
+        ]
+    )
+
+
+def plot_multi(args):
+    runtimes = sorted(args.runtimes)
+    outdir = args.output
+    if args.runtime_options:
+        runtime_options = args.runtime_options.replace(" ", "_")
+    else:
+        runtime_options = ""
+    all_num_iterations = set()
+    json_files = []
+    title_args = []
+    for benchmark in args.benchmark:
+        json_output = filter_runtimes(runtimes, f"{outdir}/results-{benchmark}{runtime_options}.json")
+        title_args += ["--title", benchmark]
+        json_files.append(json_output)
+        all_num_iterations.add(extract_num_iterations(json_output))
+    assert len(all_num_iterations) == 1, "Benchmarks run for different iteration counts"
+    num_iterations = all_num_iterations.pop()
+    title = f"Time for {human_format(num_iterations)} iterations (lower is better)"
+    if args.runtime_options:
+        title += f" ({args.runtime_options})"
+    root = pathlib.Path(__file__).parent / ".."
+    run(
+        [
+            sys.executable,
+            str(root / "plot_whisker_multi.py"),
+            "--labels", ",".join(runtimes),
+            "--suptitle", title,
+            "--output", f"{outdir}/results-multi{runtime_options}.png",
+            "--dpi", str(args.dpi),
+            *json_files,
+            *title_args,
         ]
     )
 
@@ -213,6 +252,7 @@ def main():
     parser.add_argument("--runtime-options", default="")
     parser.add_argument("--output", default="out")
     parser.add_argument("--plot", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--plot-multi", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument(
         "--plot-only", action=argparse.BooleanOptionalAction, default=False
     )
@@ -230,8 +270,10 @@ def main():
         args.plot = True
     if not args.plot_only:
         run_benchmarks(args)
-    if args.plot:
+    if args.plot and not args.plot_multi:
         plot_benchmarks(args)
+    if args.plot_multi:
+        plot_multi(args)
 
 
 if __name__ == "__main__":
