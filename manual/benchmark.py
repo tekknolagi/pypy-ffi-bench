@@ -125,31 +125,44 @@ def run_benchmark(args, benchmark):
             ],
             verbose=True,
         )
-    if args.plot or args.plot_only:
-        title = f"Time for {benchmark} with {human_format(num_iterations)} iterations (lower is better)"
-        if args.runtime_options:
-            title += f" ({args.runtime_options})"
-        root = pathlib.Path(__file__).parent / ".."
-        run(
-            [
-                sys.executable,
-                str(root / "plot_whisker.py"),
-                "--labels",
-                comma_runtime_names,
-                "--title",
-                title,
-                "--output",
-                f"{outdir}/results-{benchmark}{runtime_options}.png",
-                "--dpi",
-                str(args.dpi),
-                json_output,
-            ]
-        )
+
+
+def plot_single(args, benchmark):
+    outdir = args.output
+    if args.runtime_options:
+        runtime_options = args.runtime_options.replace(" ", "_")
+    else:
+        runtime_options = ""
+    json_output = f"{outdir}/results-{benchmark}{runtime_options}.json"
+    title = f"Time for {benchmark} with {human_format(args.num_iterations)} iterations (lower is better)"
+    if args.runtime_options:
+        title += f" ({args.runtime_options})"
+    root = pathlib.Path(__file__).parent / ".."
+    run(
+        [
+            sys.executable,
+            str(root / "plot_whisker.py"),
+            "--labels",
+            ",".join(args.runtimes),
+            "--title",
+            title,
+            "--output",
+            f"{outdir}/results-{benchmark}{runtime_options}.png",
+            "--dpi",
+            str(args.dpi),
+            json_output,
+        ]
+    )
 
 
 def run_benchmarks(args):
     for benchmark in args.benchmark:
         run_benchmark(args, benchmark)
+
+
+def plot_benchmarks(args):
+    for benchmark in args.benchmark:
+        plot_single(args, benchmark)
 
 
 def parse_runtimes(comma_separated):
@@ -189,7 +202,12 @@ def main():
         args.runtimes = [
             runtime for runtime in args.runtimes if "graalpy23" not in runtime
         ]
-    run_benchmarks(args)
+    if args.plot_only:
+        args.plot = True
+    if not args.plot_only:
+        run_benchmarks(args)
+    if args.plot:
+        plot_benchmarks(args)
 
 
 if __name__ == "__main__":
